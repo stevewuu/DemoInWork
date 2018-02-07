@@ -1,0 +1,16 @@
+eclipse.preferences.version=1
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.Debug_RAM/PATH/delimiter=;
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.Debug_RAM/PATH/operation=prepend
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.Debug_RAM/PATH/value=
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.Debug_RAM/append=true
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.Debug_RAM/appendContributed=true
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.debug.398732931/PATH/delimiter=;
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.debug.398732931/PATH/operation=prepend
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.debug.398732931/PATH/value=
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.debug.398732931/append=true
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.debug.398732931/appendContributed=true
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.release.1059659635/PATH/delimiter=;
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.release.1059659635/PATH/operation=prepend
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.release.1059659635/PATH/value=
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.release.1059659635/append=true
+environment/project/com.freescale.s32ds.cross.gnu.arm.cortexm.exe.release.1059659635/appendContributed=true

@@ -50,3 +50,12 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Project folder
+Debug/
+.vscode/
+.metadata/
+Documentation/
+FreeRTOS_TAD_logs/
+MQX_RTOS_TAD_logs/
+RemoteSystemsTempFiles/

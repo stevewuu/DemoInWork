@@ -1,0 +1,114 @@
+/*---------GLOBAL DEFINITIONS-----------*/
+LIN_description_file;
+LIN_protocol_version             = "2.1";
+LIN_language_version             = "2.1";
+LIN_speed                        = 19.2 kbps;
+/* ----------NODE DEFINITIONS---------- */
+Nodes {
+   Master:
+      Master_LIN,                                            /* Master node name */
+      1.0 ms,                                                /* Time base */
+      0.1 ms;                                                /* Jitter */
+   Slaves:
+      Slave_LIN;
+}
+/* ----------SIGNAL DEFINITIONS---------- */
+Signals {
+   /* Signal_name                : Size,       Init,            Publisher, Subscriber(s) */
+   BootStatus                    : 15,        0x0,            Slave_LIN, Master_LIN;
+   BootCMD                       :  8,        0x0,           Master_LIN, Slave_LIN;
+   BootErr                       :  1,        0x0,            Slave_LIN, Master_LIN;
+   BootData                      : 64, {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0},           Master_LIN, Slave_LIN;
+}
+/* ----------DIAGNOSTIC SIGNAL DEFINITIONS---------- */
+Diagnostic_signals {
+   /* MasterReq Reserved Signals */
+   MasterReqB0         :    8,   0;
+   MasterReqB1         :    8,   0;
+   MasterReqB2         :    8,   0;
+   MasterReqB3         :    8,   0;
+   MasterReqB4         :    8,   0;
+   MasterReqB5         :    8,   0;
+   MasterReqB6         :    8,   0;
+   MasterReqB7         :    8,   0;
+   /* SlaveResp Reserved Signals */
+   SlaveRespB0         :    8,   0;
+   SlaveRespB1         :    8,   0;
+   SlaveRespB2         :    8,   0;
+   SlaveRespB3         :    8,   0;
+   SlaveRespB4         :    8,   0;
+   SlaveRespB5         :    8,   0;
+   SlaveRespB6         :    8,   0;
+   SlaveRespB7         :    8,   0;
+}
+/* ----------UNCONDITIONAL FRAME DEFINITIONS---------- */
+Frames {
+   BootWriteCMD        : 0x3b, Master_LIN          ,    1 {
+      BootCMD             , 0;
+   }
+   BootWriteData       : 0x39, Master_LIN          ,    8 {
+      BootData            , 0;
+   }
+   BootReadStatus      :  0x1, Slave_LIN           ,    2 {
+      BootStatus          , 0;
+      BootErr             , 15;
+   }
+}
+/* ----------SPORADIC FRAME DEFINITIONS---------- */
+Sporadic_frames {
+   BootWrite           : BootWriteCMD, BootWriteData;
+}
+/* ----------DIAGNOSTIC FRAME DEFINITIONS---------- */
+Diagnostic_frames {
+   MasterReq           : 0x3c {
+      MasterReqB0         , 0;
+      MasterReqB1         , 8;
+      MasterReqB2         , 16;
+      MasterReqB3         , 24;
+      MasterReqB4         , 32;
+      MasterReqB5         , 40;
+      MasterReqB6         , 48;
+      MasterReqB7         , 56;
+   }
+   SlaveResp           : 0x3d {
+      SlaveRespB0         , 0;
+      SlaveRespB1         , 8;
+      SlaveRespB2         , 16;
+      SlaveRespB3         , 24;
+      SlaveRespB4         , 32;
+      SlaveRespB5         , 40;
+      SlaveRespB6         , 48;
+      SlaveRespB7         , 56;
+   }
+}
+/* ----------NODE ATTRIBUTE DEFINITIONS---------- */
+Node_attributes {
+   Slave_LIN {
+      LIN_protocol               = "2.1";                    /* Node protocol version */
+      configured_NAD             = 0x2;                      /* configured NAD of node (1-125) */
+      initial_NAD                = 0xa;                      /* initial NAD of node (1-125) */
+      product_id                 =   0x1e,    0x1,    0x0;   /* Product id */
+      response_error             = BootErr;                  /* Response error signal */
+      P2_min                     = 100 ms;                   /* P2_min */
+      ST_min                     = 20 ms;                    /* ST_min */
+      N_As_timeout               = 1000 ms;                  /* N_As timeout value */
+      N_Cr_timeout               = 1000 ms;                  /* N_Cr timeout value */
+      configurable_frames {
+         BootWriteCMD;
+         BootWriteData;
+         BootReadStatus;
+         BootWrite;
+      }
+   }
+}
+/* ----------SCHEDULE TABLE DEFINITIONS---------- */
+Schedule_tables {
+   NormalTable {
+      BootWrite                           delay 9.2 ms;
+      BootWrite                           delay 9.2 ms;
+      BootWrite                           delay 9.2 ms;
+      BootWrite                           delay 9.2 ms;
+      BootReadStatus                      delay 4.8 ms;
+   }
+}
+

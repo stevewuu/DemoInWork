@@ -696,8 +696,8 @@ void ICS_Init(ICS_ConfigType *pConfig)
 	   ICS_C1|=ICS_C1_IRCLKEN_MASK; 		/* Enable the internal reference clock*/ 
 	   ICS_C1 |=ICS_C1_CLKS(0b00);          /* Clock source select   Output FLL is selected */
 	   ICS_SetBusDivider(pConfig->bdiv);	 /* Set core frequency, bus frequency = core freq /2*/
-	   SIM_BUSDIV |=SIM_BUSDIV_BUSDIV_MASK;  /*Core frequency divide by 2 for Bus freq*/
-	   
+	   //bug:don't use this to do a DIV Set in LIN communication ==Howard-19-02-26
+       //SIM_CLKDIV|=SIM_CLKDIV_OUTDIV2_MASK;  /*Core frequency divide by 2 for Bus freq*/	   
     } 
   
   else if (pConfig->u8ClkMode == ICS_CLK_MODE_FEI_CUSTOM)

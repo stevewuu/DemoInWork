@@ -9,24 +9,28 @@
 #include "derivative.h" /* include peripheral declarations */
 #include "lin.h"
 #include "ics.h"
+#include "gpio.h"
 /**********************************************************************************************
 * Constants and macros
 **********************************************************************************************/
 #define MASTER 0
 
-#define LED0_TOGGLE		OUTPUT_TOGGLE(PORT_C,16)
-#define LED1_TOGGLE		OUTPUT_TOGGLE(PORT_C,17)
-#define LED2_TOGGLE		OUTPUT_TOGGLE(PORT_C,18)
+#define LED0_TOGGLE		OUTPUT_TOGGLE(PTC,PTC0)
+#define LED1_TOGGLE		OUTPUT_TOGGLE(PTC,PTC1)
+#define LED2_TOGGLE		OUTPUT_TOGGLE(PTC,PTC2)
+#define LED3_TOGGLE		OUTPUT_TOGGLE(PTC,PTC3)
+                                               
+#define LED0_OFF		OUTPUT_CLEAR(PTC,PTC0);
+#define LED1_OFF		OUTPUT_CLEAR(PTC,PTC1);
+#define LED2_OFF		OUTPUT_CLEAR(PTC,PTC2);
+#define LED3_OFF		OUTPUT_CLEAR(PTC,PTC3);
+                                               
+#define LED0_ON			OUTPUT_SET(PTC,PTC0);  
+#define LED1_ON			OUTPUT_SET(PTC,PTC1);  
+#define LED2_ON			OUTPUT_SET(PTC,PTC2);  
+#define LED3_ON			OUTPUT_SET(PTC,PTC3);  
 
-#define LED0_OFF		OUTPUT_CLEAR(PORT_C,16);
-#define LED1_OFF		OUTPUT_CLEAR(PORT_C,17);
-#define LED2_OFF		OUTPUT_CLEAR(PORT_C,18);
-
-#define LED0_ON			OUTPUT_SET(PORT_C,16);
-#define LED1_ON			OUTPUT_SET(PORT_C,17);
-#define LED2_ON			OUTPUT_SET(PORT_C,18);
-
-
+#if 0
 #define OUTPUT  1
 #define INPUT	0
 
@@ -57,7 +61,7 @@
 
 #define OUTPUT_TOGGLE(port,register_num)			XOUTPUT_TOGGLE(port,register_num)
 #define XOUTPUT_TOGGLE(port,register_num)			GPIO##port##_PTOR |=1<<register_num
-
+#endif
 
 /**********************************************************************************************
 * Global variables
@@ -77,7 +81,7 @@ void Clk_Init()
 	ICS_ConfigType ICS_set;					/* Declaration of ICS_setup structure */
 
 	ICS_set.u8ClkMode=ICS_CLK_MODE_FEI;
-	ICS_set.bdiv=0;
+	ICS_set.bdiv=1;
 	ICS_Init(&ICS_set);						/*Initialization of Core clock at 32.768 MHz, bus clock at 16.384 MHz*/
 
 }
@@ -90,6 +94,7 @@ void Clk_Init()
 ************************************************************************************************/
 void GPIO_Init()
 {
+	#if 0
 	CONFIG_PIN_AS_GPIO(PORT_C,16,OUTPUT); /* Configure LED 0 (PTC0) as an output */
 	CONFIG_PIN_AS_GPIO(PORT_C,17,OUTPUT); /* Configure LED 1 (PTC1) as an output */
 
@@ -108,6 +113,16 @@ void GPIO_Init()
 	/* Configure the push buttons of your device. */
 #endif
 
+#endif
+	CONFIG_PIN_AS_GPIO(PTC,PTC0,OUTPUT);
+	CONFIG_PIN_AS_GPIO(PTC,PTC1,OUTPUT);
+	CONFIG_PIN_AS_GPIO(PTC,PTC2,OUTPUT);
+										
+	CONFIG_PIN_AS_GPIO(PTD,PTD0,INPUT); 
+	CONFIG_PIN_AS_GPIO(PTD,PTD1,INPUT); 
+	ENABLE_INPUT(PTD,PTD0);			 	
+	ENABLE_INPUT(PTD,PTD1);				
+										
 	LED0_OFF;							/* Turn off LED0 */
 	LED1_OFF;							/* Turn off LED1 */
 	LED2_OFF;							/* Turn off LED2 */
@@ -131,7 +146,7 @@ void lin_application_timer_FTM0()
 	FTM0_C0SC |= FTM_CnSC_CHIE_MASK; /* Enable channel 0 interrupt */
 	FTM0_C0SC |= FTM_CnSC_MSA_MASK;  /* Channel as Output compare mode */
 		/*Select interrupt frequency*/
-	FTM0_C0V = FTM_CnV_VAL(391 * 4) ;	 	/* Interrupt every 2.5ms */
+	FTM0_C0V = FTM_CnV_VAL(189) ;	 	/* Interrupt every 2.5ms */
 
 	FTM0_SC |= FTM_SC_CLKS(1); /*FTM0 use system clock*/
 
@@ -204,7 +219,7 @@ void FTM0_IRQHandler()
   	{
   		(void)FTM0_C0SC;  							/* Read to clear flag */
   		FTM0_C0SC ^= FTM_CnSC_CHF_MASK;  			/* Clear flag */
-  		FTM0_C0V = FTM0_C0V + 391 * 4 ; /* Refresh interrupt period */
+  		FTM0_C0V = FTM0_C0V + 189 ; /* Refresh interrupt period */
 
   		if (LIN_counter>=6){
   		    /* Activate LIN frame transfer for every 15ms */

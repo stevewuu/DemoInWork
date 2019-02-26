@@ -1,0 +1,187 @@
+/******************************************************************************
+* 
+* Freescale Semiconductor Inc.
+* (c) Copyright 2013-2016 Freescale Semiconductor, Inc.
+* Copyright 2016-2019 NXP
+* ALL RIGHTS RESERVED.
+* 
+****************************************************************************//*!
+*
+* @file      lin_cfg.c
+*
+* @author    FPT Software
+*
+* @version   1.0
+*
+* @date      Tue Feb 26 15:11:11 CST 2019
+*
+* @brief     Common LIN configuration, data structure
+*
+******************************************************************************/
+#include "lin_cfg.h"
+#include "lin.h"
+/* Mapping interface with hardware */
+const lin_hardware_name lin_virtual_ifc = UART0_;
+l_u8 lin_lld_response_buffer[10];
+l_u8 lin_successful_transfer;
+l_u8 lin_error_in_response;
+l_u8 lin_goto_sleep_flg;
+/* Save configuration flag */
+l_u8 lin_save_configuration_flg = 0;
+lin_word_status_str lin_word_status;
+l_u8 lin_current_pid;
+
+const l_signal_handle BootProtocol_response_error_signal = BootProtocol_BootErr;
+const l_u8 response_error_byte_offset = LIN_BYTE_OFFSET_BootProtocol_BootErr;
+const l_u8 response_error_bit_offset = LIN_BIT_OFFSET_BootProtocol_BootErr;
+
+
+/* definition and initialization of signal array */
+l_u8    lin_pFrameBuf[LIN_FRAME_BUF_SIZE] =
+{
+
+
+  0x00 /* 0 : 00000000 */ /* start of frame BootProtocol_BootWriteCMD */
+
+
+
+  ,0x00 /* 1 : 00000000 */ /* start of frame BootProtocol_BootWriteData */
+
+  ,0x00 /* 2 : 00000000 */
+  
+  ,0x00 /* 3 : 00000000 */
+  
+  ,0x00 /* 4 : 00000000 */
+  
+  ,0x00 /* 5 : 00000000 */
+  
+  ,0x00 /* 6 : 00000000 */
+  
+  ,0x00 /* 7 : 00000000 */
+  
+  ,0x00 /* 8 : 00000000 */
+  
+
+  ,0x00 /* 9 : 00000000 */ /* start of frame BootProtocol_BootReadStatus */
+
+  ,0x00 /* 10 : 00000000 */
+  
+};
+
+/* definition and initialization of signal array */
+l_u8    lin_flag_handle_tbl[LIN_FLAG_BUF_SIZE] =
+{
+
+
+  0x00 /* 0: start of flag frame BootProtocol_BootWriteCMD */
+
+
+
+  ,0x00 /* 1: start of flag frame BootProtocol_BootWriteData */
+
+
+  ,0x00 /* 2: start of flag frame BootProtocol_BootReadStatus */
+
+};
+
+/*************************** Flag set when signal is updated ******************/
+/* Diagnostic signal */
+l_u8 lin_diag_signal_tbl[16];
+/*****************************event trigger frame*****************************/
+
+/**********************************  Frame table **********************************/
+const lin_frame_struct lin_frame_tbl[LIN_NUM_OF_FRMS] ={
+
+    { LIN_FRM_UNCD, 1, LIN_RES_SUB, 0, 0, 1   , (l_u8*)0 }
+
+   ,{ LIN_FRM_UNCD, 8, LIN_RES_SUB, 1, 1, 1 , (l_u8*)0 }
+  
+   ,{ LIN_FRM_UNCD, 2, LIN_RES_PUB, 9, 2, 1 , (l_u8*)&BootProtocol_response_error_signal }
+  
+   ,{ LIN_FRM_DIAG, 8, LIN_RES_SUB, 0, 0, 0 , (l_u8*)0 }
+  
+   ,{ LIN_FRM_DIAG, 8, LIN_RES_PUB, 0, 0, 0 , (l_u8*)0 }
+  
+};
+
+/*********************************** Frame flag Initialization **********************/
+l_bool lin_frame_flag_tbl[LIN_NUM_OF_FRMS] = {0, 0, 0, 0, 0};
+
+/**************************** Lin configuration Initialization ***********************/
+/* max_response_frame_timeout = round((1.4x(10+Nx10)xTbit)/Tbase_period) + 3 */
+
+const l_u16 lin_max_frame_res_timeout_val[8]={
+
+6, 7, 9, 10, 12, 13, 15, 16
+
+};
+
+
+l_u8 lin_configuration_RAM[LIN_SIZE_OF_CFG]= {0x00, 0x3B, 0x39, 0x01, 0x3C, 0x3D ,0xFF};
+const l_u16  lin_configuration_ROM[LIN_SIZE_OF_CFG]= {0x00, 0x3B, 0x39, 0x01, 0x3C, 0x3D ,0xFFFF};
+
+/***************************************** Node Attribute*****************************************/
+
+l_u8 lin_configured_NAD = 0x02;    /*<configured_NAD>*/
+const l_u8 lin_initial_NAD    =0x0A;    /*<initial_NAD>*/
+const lin_product_id product_id = {0x001E, 0x0001, 0x0000 };  /* {<supplier_id>,<function_id>,<variant>} */
+const l_signal_handle response_error =  BootProtocol_BootErr;
+
+
+
+/************************** TL Layer and Diagnostic: SINGLE interface **************************/
+lin_tl_pdu_data tx_single_pdu_data = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+lin_tl_pdu_data rx_single_pdu_data = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+
+
+
+
+
+
+/****************************Support SID Initialization ***********************/
+
+const l_u8 lin_diag_services_supported[_DIAG_NUMBER_OF_SERVICES_] = {0xB2,0xB7};
+l_u8 lin_diag_services_flag[_DIAG_NUMBER_OF_SERVICES_] = {0,0};
+
+lin_tl_pdu_data *tl_current_tx_pdu_ptr;
+lin_tl_pdu_data *tl_current_rx_pdu_ptr;
+l_u8 tl_slaveresp_cnt = 0;
+/*This ld_read_by_id_callout() function is used when the master node transmits a read by
+ identifier request with an identifier in the user defined area (id from 32 to 63).
+ The driver will call this function when such request is received.
+ * id: the identifier in the user defined area (32 to 63)
+ * data: pointer points to a data area with 5 bytes, used to give the positive response.
+  Driver uses 0xFF "do not care value" for unassigned data values.
+  Data length in PCI is (1 + number of assigned meaningful data values).
+  Driver will take as data for all data before and including the last value in the frame that is different from 0xFF.
+  PCI is 0x02-0x06, so data should have at least one value different from 0xFF.
+  For example, a response frame, (NAD) (PCI) (0xF2) (0xFF) (0x00) (0xFF) (0xFF) (0xFF),
+  PCI will be 0x03, since in this case driver takes all data before 0x00 and 0x00 as meaningful data,
+  and values after 0x00 are do not care value.
+ * return: LD_NEGATIVE_RESPONSE Respond with a negative response.
+           LD_POSTIVE_RESPONSE Respond with a positive response.
+           LD_ID_NO_RESPONSE The slave node will not answer.
+ */
+l_u8 ld_read_by_id_callout(l_u8 id, l_u8 *data)
+{
+    l_u8 retval = LD_NEGATIVE_RESPONSE;
+    /* Following code is an example - Real implementation is application-dependent */
+    /* This example implement with ID = 32 - LIN_READ_USR_DEF_MIN */
+    if (id == LIN_READ_USR_DEF_MIN)
+    {
+      /* id received is user defined 32 */
+      data[0] = (l_u8) (id + 1);    /* Data user define */
+      data[1] = (l_u8) (id + 2);    /* Data user define */
+      data[2] = (l_u8) (id + 3);    /* Data user define */
+      data[3] = (l_u8) (id + 4);    /* Data user define */
+      data[4] = (l_u8) (id + 5);    /* Data user define */
+      retval = LD_POSITIVE_RESPONSE;
+    }
+    else
+    {
+      /* other identifiers, respond with negative response by default*/
+    }
+    return retval;
+}

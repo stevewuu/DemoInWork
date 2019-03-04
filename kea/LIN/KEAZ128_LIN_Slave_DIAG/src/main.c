@@ -10,7 +10,7 @@
 /**********************************************************************************************
 * Constants and macros
 **********************************************************************************************/
-#define MASTER          1
+#define MASTER 			0
 
 #define LED0_TOGGLE		OUTPUT_TOGGLE(PTC,PTC0)
 #define LED1_TOGGLE		OUTPUT_TOGGLE(PTC,PTC1)
@@ -30,8 +30,12 @@
 
 #define MASTER_REQ_LENGTH_MAX   20
 
-l_u8 LIN_counter = 0;
-
+l_u8 LIN_counter =0;
+volatile l_u8 master_req_dat[MASTER_REQ_LENGTH_MAX];
+volatile l_u16 master_req_length;
+unsigned char io_control_status = 0xFF;
+volatile l_u8 slave_resp_dat[MASTER_REQ_LENGTH_MAX];
+volatile l_u16 slave_resp_length;
 /***********************************************************************************************
 *
 * @brief    CLK_Init - Initialize the clocks to run at 20 MHz from the 10Mhz external XTAL
@@ -46,7 +50,6 @@ void Clk_Init()
 	ICS_set.u8ClkMode=ICS_CLK_MODE_FEI;
 	ICS_set.bdiv=1;
 	ICS_Init(&ICS_set);             		/*Initialization of Core clock at 48 MHz, Bus clock at 24 MHz*/
-
 }
 /***********************************************************************************************
 *
@@ -102,64 +105,98 @@ void UartInit(void)
 * @return   none
 *
 ************************************************************************************************/
-#if MASTER
-void lin_application_timer_FTM0()
+void diagsrv_io_control_by_identifier(void)
 {
-	SIM_SCGC |= SIM_SCGC_FTM0_MASK; /* Enable Clock for FTM0 */
-	FTM0_SC |= FTM_SC_PS(7);	/* Select Preescaler in this case 128. 20 Mhz /128 =156.25 Khz. */
-									/* Counter increase by one every 6.4 us */
-		/* Enable Channle 0*/
-	FTM0_C0SC |= FTM_CnSC_CHIE_MASK; /* Enable channel 0 interrupt */
-	FTM0_C0SC |= FTM_CnSC_MSA_MASK;  /* Channel as Output compare mode */
-		/*Select interrupt frequency*/
-	FTM0_C0V = FTM_CnV_VAL(189) ;	 	/* Interrupt every 2.5ms */
+	/* process recieved data from master request */
+	ld_receive_message((l_u16*)&master_req_length, (l_u8*)master_req_dat);
+	io_control_status = master_req_dat[4];
 
-	FTM0_SC |= FTM_SC_CLKS(1); /*FTM0 use system clock*/
-
-	/* Set the ICPR and ISER registers accordingly */
-	NVIC_ClearPendingIRQ(FTM0_IRQn);
-	NVIC_EnableIRQ(FTM0_IRQn);
+  slave_resp_dat[0] = master_req_dat[0] + 0x40;
+	slave_resp_dat[1] = master_req_dat[1];
+	slave_resp_dat[2] = master_req_dat[2];
+	slave_resp_dat[3] = master_req_dat[3];
+	slave_resp_dat[4] = io_control_status;
+	slave_resp_length = 0x05;
+	/* send a message to master */
+  ld_send_message((l_u16)slave_resp_length, (l_u8*)slave_resp_dat);
+  /*clear diagnostic flag */
+  diag_clear_flag(DIAGSRV_IO_CONTROL_BY_IDENTIFIER_ORDER);
 }
-#endif
+void DiagSrvRoutineControlByIdentify(void)
+{
+	/* process recieved data from master request */
+	ld_receive_message((l_u16*)&master_req_length, (l_u8*)master_req_dat);
+	io_control_status = master_req_dat[4];
+	//LED_value = ((byte)~io_control_status) << 4; /*ToanLN*/
+  /* Display Led inidcator*/
+  //   PTCD = ( (~io_control_status) << 2);
+  /* send response to master */
+  slave_resp_dat[0] = master_req_dat[0] + 0x40;
+	slave_resp_dat[1] = master_req_dat[1];
+	slave_resp_dat[2] = master_req_dat[2];
+	slave_resp_dat[3] = master_req_dat[3];
+	slave_resp_dat[4] = master_req_dat[4];
+	slave_resp_length = 0x05;
+	/* send a message to master */
+  ld_send_message((l_u16)slave_resp_length, (l_u8*)slave_resp_dat);
+  /*clear diagnostic flag */
+  diag_clear_flag(DIAGSRV_ROUTINECONTROL_ORDER);
+}
+//fixme:negative response data necessary?
+void NegativeAck(uint8_t Sid, uint8_t RespNrc)
+{
+	//Todo:define a macro to replace Acknowledge ID
+	slave_resp_dat[0] = 0x7F;
+	slave_resp_dat[1] = Sid;
+	slave_resp_dat[2] = RespNrc;
+	ld_send_message((l_u16)3, (l_u8*)slave_resp_dat);
+}
+void DiagSrvRoutineCtrl(void)
+{
+	//todo:define a flag of flash erase state
+	uint8_t erase_state = 0;
+	uint8_t i;
+	ld_receive_message((l_u16*)&master_req_length, (l_u8*)master_req_dat);
+	if(master_req_length < 4)
+	{
+		//Todo:define a macro to replace NRC value
+		NegativeAck(master_req_dat[0], 0x13);
+		diag_clear_flag(DIAGSRV_ROUTINECONTROL_ORDER);
+		printf("IMLOIF\r\n");
+		return ;
+	}
+	if(erase_state != 0xFF)
+	{
+		NegativeAck(master_req_dat[0], 0x31);
+		diag_clear_flag(DIAGSRV_ROUTINECONTROL_ORDER);
+		printf("ROOR\r\n");
+		return ;
+	}
+	ld_receive_message((l_u16*)&master_req_length, (l_u8*)master_req_dat);
+	io_control_status = master_req_dat[4];
+	//LED_value = ((byte)~io_control_status) << 4; /*ToanLN*/
+	/* Display Led inidcator*/
+	//   PTCD = ( (~io_control_status) << 2);
+	/* send response to master */
+	slave_resp_dat[0] = master_req_dat[0] + 0x40;
 
+	slave_resp_length = master_req_length;
+	for(i = 1; i < slave_resp_length; i++)
+	{
+		slave_resp_dat[i] = master_req_dat[i];
+	}
+	/* send a message to master */
+	ld_send_message((l_u16)slave_resp_length, (l_u8*)slave_resp_dat);
+	/*clear diagnostic flag */
+	diag_clear_flag(DIAGSRV_ROUTINECONTROL_ORDER);
+
+}
 int main(void)
 {
 
-#if MASTER
-    l_u8 ret;
-    l_u32 i;
-    l_u16 LIN_resp;
-    Clk_Init();
-    GPIO_Init();
-
-    l_sys_init();
-	l_ifc_init(BootProtocol);
-	lin_application_timer_FTM0();
-	l_sch_set(BootProtocol, BootProtocol_NormalTable, 0);
-
-	NVIC_ClearPendingIRQ(UART0_IRQn);
-	NVIC_EnableIRQ(UART0_IRQn);
-
-	for(;;) 
-    {
-
-        /* When pressed SW1*/
-        if(GPIOA_PDIR & (1 << 24))
-        {
-            l_u8_wr_BootProtocol_BootCMD(0x01);
-            GPIOA_PSOR |= (1 << 16);
-
-        }
-        else
-        {
-            l_u8_wr_BootProtocol_BootCMD(0x00);
-            GPIOA_PCOR |= (1 << 16);
-        }
-
-	}
-#else
 	Clk_Init();
 	GPIO_Init();
+	UartInit();
 
 	l_sys_init();
 	l_ifc_init(BootProtocol);
@@ -170,9 +207,15 @@ int main(void)
 	l_u16_wr_BootProtocol_BootStatus(0x1);
 	for(;;)
 	{
-		if(0x1 == l_u8_rd_BootProtocol_BootCMD())
+		//if(0x1 == l_u8_rd_BootProtocol_BootCMD())
+		//if (diag_get_flag(DIAGSRV_IO_CONTROL_BY_IDENTIFIER_ORDER))
+		if (diag_get_flag(DIAGSRV_ROUTINECONTROL_ORDER))
 		{
 			LED0_ON;
+			//diagsrv_io_control_by_identifier();
+			//DiagSrvRoutineControlByIdentify();
+			//DiagSrvRoutineControlByIdentify();
+			DiagSrvRoutineCtrl();
 		}
 		else
 		{
@@ -180,27 +223,6 @@ int main(void)
 		}
 
 	}
-#endif
 	return 0;
 }
 
-#if MASTER
-void FTM0_IRQHandler()
-  {
-    if (1==((FTM0_C0SC & FTM_CnSC_CHF_MASK)>>FTM_CnSC_CHF_SHIFT) )  /* If the CHF of the channel is equal to 0 */
-  	{
-  		(void)FTM0_C0SC;  							/* Read to clear flag */
-  		FTM0_C0SC ^= FTM_CnSC_CHF_MASK;  			/* Clear flag */
-  		FTM0_C0V = FTM0_C0V + 189 ; /* Refresh interrupt period */
-
-  		if (LIN_counter>=6){
-  		    /* Activate LIN frame transfer for every 15ms */
-  		    l_sch_tick(BootProtocol);
-  		    /* Reset counter */
-  		    LIN_counter = 0;
-  		  }
-
-	  LIN_counter++;
-  	}
-  }
-#endif

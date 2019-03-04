@@ -1,0 +1,44 @@
+/*** GENERAL DEFINITION ***/
+LIN_node_config_file;
+
+/*** MCU DEFINITION ***/
+mcu {
+   mcu_name                      = SKEAZ1284;
+   bus_clock                     = 24000000;                 /* Frequency bus of system Hz*/
+   xgate_support                 = no;                       /* Support XGATE Co-Processor */
+}
+
+/*** LIN HARDWARE DEFINITION ***/
+/* Uart config */
+uart {
+   SCI{
+      uart_channel               = 0;
+   }
+}
+
+/*** NETWORK DEFINITION ***/
+network {
+   idle_timeout                  = 5 s;
+   diagnostic_class              = 3;
+   resynchronization_support     = no;
+   autobaud_support              = no;
+   max_message_length            = 12;
+   BootProtocol {
+      node                       = Slave_LIN;                /* Name of node described in LDF (must check consistence with LDF) */
+      file                       = "lin_b.ldf";              /* Name of LDF file */
+      device                     = SCI;
+      support_sid {
+         READ_BY_IDENTIFIER      = 0xb2;
+         SAVE_CONFIGURATION      = 0xb6;
+         ASSIGN_FRAME_ID_RANGE   = 0xb7;
+         READ_DATA_BY_IDENTIFIER = 0x22;
+         SESSION_CONTROL         = 0x10;
+         IO_CONTROL_BY_IDENTIFIER = 0x2f;
+         FAULT_MEMORY_READ       = 0x19;
+         FAULT_MEMORY_CLEAR      = 0x14;
+         RoutineControl          = 0x31;
+         ASSIGN_FRAME_IDENTIFIER = 0xb1;
+      }
+   }
+}
+

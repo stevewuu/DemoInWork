@@ -1,0 +1,88 @@
+<CodeGenerationInfo>
+  <ToolchainSettings>
+    <option>
+      <name>PE_G_4PEx_ToolChain_C_Compiler_Includes</name>
+      <values lines_count="7">
+        <Line>"${ProjDirPath}/SDK/platform/drivers/src/clock/S32K1xx"</Line>
+        <Line>"${ProjDirPath}/SDK/rtos/osif/"</Line>
+        <Line>"${ProjDirPath}/SDK/platform/devices"</Line>
+        <Line>"${ProjDirPath}/SDK/platform/devices/common"</Line>
+        <Line>"${ProjDirPath}/SDK/platform/devices/S32K144/include"</Line>
+        <Line>"${ProjDirPath}/SDK/platform/devices/S32K144/startup"</Line>
+        <Line>"${ProjDirPath}/SDK/platform/drivers/inc"</Line>
+      </values>
+    </option>
+    <option>
+      <name>PE_G_4PEx_ilg_gnuarmeclipse_managedbuild_cross_option_c_compiler_defs</name>
+      <values lines_count="1">
+        <Line>"CPU_S32K144_100"</Line>
+      </values>
+    </option>
+  </ToolchainSettings>
+  <GeneratedFilesList>
+    <GeneratedByPE>
+      <File Name="SDK/platform/drivers/src/clock/S32K1xx/clock_S32K1xx.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572664" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/clock/clock_manager.c" FileDate="2019-03-06, 15:32:52" FileAge="1551857572638" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/rtc/rtc_driver.c" FileDate="2019-03-06, 15:35:32" FileAge="1551857732747" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/edma/edma_irq.c" FileDate="2019-03-06, 15:41:20" FileAge="1551858080099" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/clock/S32K1xx/clock_S32K1xx.c" FileDate="2019-03-06, 15:32:52" FileAge="1551857572657" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/clock/S32K1xx/sim_hw_access.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572687" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/interrupt/interrupt_manager.c" FileDate="2019-03-06, 15:32:52" FileAge="1551857572624" FileType="1048576" />
+      <File Name="SDK/platform/devices/device_registers.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572712" FileType="1048576" />
+      <File Name="SDK/platform/devices/S32K144/include/S32K144_features.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572763" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/clock/S32K1xx/pmc_hw_access.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572676" FileType="1048576" />
+      <File Name="SDK/platform/devices/callbacks.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572716" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/rtc/rtc_irq.c" FileDate="2019-03-06, 15:35:32" FileAge="1551857732750" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/lpuart/lpuart_hw_access.h" FileDate="2019-03-06, 15:41:20" FileAge="1551858080217" FileType="1048576" />
+      <File Name="Generated_Code/dmaController1.h" FileDate="2019-03-06, 15:41:20" FileAge="1551858080323" FileType="45637" CompNumb="7" />
+      <File Name="SDK/platform/drivers/src/lpuart/lpuart_hw_access.c" FileDate="2019-03-06, 15:41:20" FileAge="1551858080205" FileType="1048576" />
+      <File Name="SDK/platform/drivers/inc/interrupt_manager.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572630" FileType="1048576" />
+      <File Name="SDK/platform/drivers/inc/edma_driver.h" FileDate="2019-03-06, 15:41:20" FileAge="1551858080153" FileType="1048576" />
+      <File Name="Generated_Code/dmaController1.c" FileDate="2019-03-06, 15:41:20" FileAge="1551858080319" FileType="45637" CompNumb="7" />
+      <File Name="SDK/platform/drivers/src/pins/pins_gpio_hw_access.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572589" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/lpuart/lpuart_irq.h" FileDate="2019-03-06, 15:41:20" FileAge="1551858080246" FileType="1048576" />
+      <File Name="SDK/platform/devices/startup.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572725" FileType="1048576" />
+      <File Name="SDK/platform/devices/devassert.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572704" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/lpuart/lpuart_irq.c" FileDate="2019-03-06, 15:41:20" FileAge="1551858080241" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/pins/pins_port_hw_access.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572613" FileType="1048576" />
+      <File Name="SDK/platform/devices/startup.c" FileDate="2019-03-06, 15:32:52" FileAge="1551857572729" FileType="1048576" />
+      <File Name="Generated_Code/pin_mux.h" FileDate="2019-03-06, 15:41:20" FileAge="1551858080342" FileType="45637" CompNumb="2" />
+      <File Name="SDK/platform/drivers/src/pins/pins_port_hw_access.c" FileDate="2019-03-06, 15:32:52" FileAge="1551857572607" FileType="1048576" />
+      <File Name="SDK/platform/devices/S32K144/include/S32K144.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572768" FileType="1048576" />
+      <File Name="Generated_Code/pin_mux.c" FileDate="2019-03-06, 15:41:20" FileAge="1551858080350" FileType="45637" CompNumb="2" />
+      <File Name="SDK/platform/devices/common/s32_core_cm4.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572721" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/clock/S32K1xx/scg_hw_access.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572681" FileType="1048576" />
+      <File Name="Sources/main.c" FileDate="2019-03-06, 15:43:17" FileAge="1551858197675" FileType="128" />
+      <File Name="SDK/platform/drivers/inc/rtc_driver.h" FileDate="2019-03-06, 15:35:32" FileAge="1551857732796" FileType="1048576" />
+      <File Name="SDK/platform/drivers/inc/clock_manager.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572697" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/edma/edma_driver.c" FileDate="2019-03-06, 15:41:20" FileAge="1551858080050" FileType="1048576" />
+      <File Name="Documentation/S32K144_RTC_Settings.xml" FileDate="2019-03-06, 15:41:20" FileAge="1551858080432" FileType="3072" />
+      <File Name="Generated_Code/Cpu.h" FileDate="2019-03-06, 15:41:20" FileAge="1551858080375" FileType="45637" CompNumb="1" />
+      <File Name="Generated_Code/Cpu.c" FileDate="2019-03-06, 15:32:52" FileAge="1551857572774" FileType="45637" CompNumb="1" />
+      <File Name="SDK/platform/drivers/src/edma/edma_hw_access.h" FileDate="2019-03-06, 15:41:20" FileAge="1551858080117" FileType="1048576" />
+      <File Name="Generated_Code/lpuart1.h" FileDate="2019-03-06, 15:41:20" FileAge="1551858080315" FileType="45637" CompNumb="6" />
+      <File Name="SDK/platform/drivers/src/rtc/rtc_hw_access.h" FileDate="2019-03-06, 15:35:32" FileAge="1551857732788" FileType="1048576" />
+      <File Name="SDK/platform/devices/status.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572708" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/edma/edma_hw_access.c" FileDate="2019-03-06, 15:41:20" FileAge="1551858080083" FileType="1048576" />
+      <File Name="Generated_Code/lpuart1.c" FileDate="2019-03-06, 15:45:31" FileAge="1551858331513" FileType="45637" CompNumb="6" />
+      <File Name="SDK/platform/drivers/inc/lpuart_driver.h" FileDate="2019-03-06, 15:41:20" FileAge="1551858080257" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/rtc/rtc_hw_access.c" FileDate="2019-03-06, 15:35:32" FileAge="1551857732783" FileType="1048576" />
+      <File Name="Generated_Code/rtcTimer1.h" FileDate="2019-03-06, 15:35:32" FileAge="1551857732857" FileType="45637" CompNumb="5" />
+      <File Name="SDK/platform/drivers/src/clock/S32K1xx/pcc_hw_access.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572670" FileType="1048576" />
+      <File Name="SDK/platform/drivers/inc/pins_driver.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572599" FileType="1048576" />
+      <File Name="Generated_Code/clockMan1.h" FileDate="2019-03-06, 15:41:20" FileAge="1551858080358" FileType="45637" CompNumb="3" />
+      <File Name="SDK/platform/devices/S32K144/startup/system_S32K144.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572737" FileType="1048576" />
+      <File Name="Documentation/S32K144_RTC.txt" FileDate="2019-03-06, 15:41:20" FileAge="1551858080460" FileType="3072" />
+      <File Name="Generated_Code/rtcTimer1.c" FileDate="2019-03-06, 15:35:32" FileAge="1551857732849" FileType="45637" CompNumb="5" />
+      <File Name="SDK/rtos/osif/osif_baremetal.c" FileDate="2019-03-06, 15:41:20" FileAge="1551858080187" FileType="1048576" />
+      <File Name="SDK/rtos/osif/osif.h" FileDate="2019-03-06, 15:41:20" FileAge="1551858080172" FileType="1048576" />
+      <File Name="SDK/platform/devices/S32K144/startup/system_S32K144.c" FileDate="2019-03-06, 15:32:52" FileAge="1551857572743" FileType="1048576" />
+      <File Name="Generated_Code/clockMan1.c" FileDate="2019-03-06, 15:41:20" FileAge="1551858080366" FileType="45637" CompNumb="3" />
+      <File Name="SDK/platform/drivers/src/pins/pins_driver.c" FileDate="2019-03-06, 15:32:52" FileAge="1551857572566" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/lpuart/lpuart_driver.c" FileDate="2019-03-06, 15:41:20" FileAge="1551858080226" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/edma/edma_irq.h" FileDate="2019-03-06, 15:41:20" FileAge="1551858080133" FileType="1048576" />
+      <File Name="SDK/platform/drivers/src/clock/S32K1xx/smc_hw_access.h" FileDate="2019-03-06, 15:32:52" FileAge="1551857572691" FileType="1048576" />
+    </GeneratedByPE>
+  </GeneratedFilesList>
+  <CodeGenReference>5</CodeGenReference>
+</CodeGenerationInfo>

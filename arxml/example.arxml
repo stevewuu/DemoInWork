@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AUTOSAR xmlns="http://autosar.org/schema/r4.0">
+  <AR-PACKAGES>
+    <AR-PACKAGE>
+      <SHORT-NAME>Example</SHORT-NAME>
+      <!-- 真实项目会包含 SWC, ComSpec, PDU 等复杂结构 -->
+    </AR-PACKAGE>
+  </AR-PACKAGES>
+</AUTOSAR>
